@@ -20,7 +20,7 @@ fetch("http://localhost:3000/api/products/" + newID)
 
 function displaySofa(formSofa) {
 
-    let sofaImage = document.getElementById('item__img');
+    let sofaImage = document.querySelector('.item__img');
 
     // Insertion image du canapé
     var creaSofaImage = document.createElement('img');
@@ -40,4 +40,19 @@ function displaySofa(formSofa) {
     let sofaDescription = document.getElementById('description');
     sofaDescription.textContent = formSofa.description;
 
+    // Récupération des couleurs possibles du canapé
+    let sofaOption = document.getElementById('colors');
+
+    // Insertion des couleurs dans une variable
+    var colors = formSofa.colors;
+
+    // Lecture du tableau des couleurs et insertion de celles-ci dans les disponibilités 
+    for (var i = 0; i < colors.length; i++) {
+        var colorSofa = colors[i];
+        var creaOption = document.createElement('option');
+        creaOption.setAttribute('value', colorSofa);
+        creaOption.textContent = colorSofa;
+        sofaOption.appendChild(creaOption);
+
+    }
 }

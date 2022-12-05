@@ -10,12 +10,15 @@ fetch("http://localhost:3000/api/products/" + newID)
         console.log(data);
 
         document.title = data.name;
+
         displaySofa(data);
     })
 
     .catch(error => {
         console.log('Erreur Serveur Detectée ', error);
     });
+
+
 
 function displaySofa(formSofa) {
 

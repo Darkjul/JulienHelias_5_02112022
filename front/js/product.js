@@ -48,7 +48,7 @@ function displaySofa(formSofa) {
     // Insertion des couleurs dans une variable
     var colors = formSofa.colors;
 
-    // Lecture du tableau des couleurs et insertion de celles-ci dans les disponibilités 
+    // Lecture du tableau des couleurs et insertion de celles-ci dans les disponibilités
 
     for (let colorSofa of colors) {
         var creaOption = document.createElement('option');

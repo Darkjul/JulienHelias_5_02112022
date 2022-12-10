@@ -20,7 +20,7 @@ fetch("http://localhost:3000/api/products/" + newID)
 
 
 
-function displaySofa(formSofa) {
+function displaySofa() {
 
     let sofaImage = document.querySelector('.item__img');
 

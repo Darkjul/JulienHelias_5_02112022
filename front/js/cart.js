@@ -140,6 +140,129 @@ function displayProductBasket(basketProduct, product) {
     creaDivContentsDelete.appendChild(creapDelete);
 }
 
+// Modification de la quantité de canapé dans le panier
+
+function changeQuantity() {
+
+    let sofaQuantity = document.querySelectorAll('.itemQuantity');
+
+    for (let j = 0; j < sofaQuantity.length; j++) {
+
+        sofaQuantity[j].addEventListener('change', (event) => {
+
+            event.preventDefault();
+
+            // Choix de la nouvelle quantité qui sera sauvegardé dans le Local Storage avec les éléments déjà présent
+
+            let sofaNewQty = sofaQuantity[j].value;
+
+            const updatedLocalStorage = {
+                id: sofaInLocalStorage[j].id,
+                image: sofaInLocalStorage[j].image,
+                alt: sofaInLocalStorage[j].alt,
+                name: sofaInLocalStorage[j].name,
+                color: sofaInLocalStorage[j].color,
+                price: sofaInLocalStorage[j].price,
+                quantity: sofaNewQty,
+            };
+
+            // Actualisation du Local Storage avec les nouvelles entrées 
+
+            sofaInLocalStorage[j] = updatedLocalStorage;
+
+            localStorage.setItem('sofa', JSON.stringify(sofaInLocalStorage));
+
+            // Alerte pour avertir de la MAJ du panier
+
+            alert('Votre panier a été mis à jour.');
+            totalSofa();
+            finalBasketPrice();
+        })
+    }
+}
+changeQuantity();
+
+// Suppression d'un produit du panier
+
+function deleteArticle() {
+
+    const deleteSofa = document.querySelectorAll('.deleteItem');
+
+    for (let k = 0; k < deleteSofa.length; k++) {
+
+        deleteSofa[k].addEventListener('click', (event) => {
+            event.preventDefault();
+
+            // Enregistrement de l'id et de la couleur séléctionnés pour suppression
+
+            let delID = sofaInLocalStorage[k].id;
+            let delColor = sofaInLocalStorage[k].color;
+
+            // Filtration de l'élément du click           
+
+            sofaInLocalStorage = sofaInLocalStorage.filter(elt => elt.id !== delID || elt.color !== delColor);
+
+            // Actualisation du Local Storage avec les nouvelles entrées 
+
+            localStorage.setItem('sofa', JSON.stringify(sofaInLocalStorage));
+
+            // Alerte pour avertir de la MAJ du panier
+
+            alert('Votre canapé a bien été supprimé.');
+            window.location.href = "cart.html";
+        });
+    }
+}
+deleteArticle();
+
+// Affichage du total des canapés dans le panier
+
+function totalSofa() {
+
+    let totalSofas = 0;
+
+    for (l in sofaInLocalStorage) {
+
+        // On convertit la valeur 'quantité' dans le Local Storage en une chaîne et on renvoit un entier décimal
+
+        const newSofaQuantity = parseInt(sofaInLocalStorage[l].quantity, 10);
+
+        // attribuer la valeur retournée par parseInt à la variable totalSofas
+
+        totalSofas += newSofaQuantity;
+    }
+
+    // On attribut à #totalQuantity la valeur de totalSofas
+
+    const totalQuantity = document.getElementById('totalQuantity');
+    totalQuantity.textContent = totalSofas;
+}
+totalSofa();
+
+// Calcul du montant total du panier
+
+function finalBasketPrice() {
+
+    const priceCalc = [];
+
+    for (m = 0; m < sofaInLocalStorage.length; m++) {
+
+        // Calcul du prix de l'article par quantité * prix
+
+        const basketAmount = sofaInLocalStorage[m].price * sofaInLocalStorage[m].quantity;
+        priceCalc.push(basketAmount);
+
+        // Reduce() permet de garder en mémoire les résultats de l'opération demandée en accumulant les valeurs tout en gardant la valeur courante
+
+        const redux = (previousValue, currentValue) => previousValue + currentValue;
+        total = priceCalc.reduce(redux);
+    }
+    const finalTotalPrice = document.getElementById('totalPrice');
+
+    finalTotalPrice.textContent = total;
+}
+finalBasketPrice();
+
 // Validation du formulaire de commande
 
 let formKanap = document.querySelector(".cart__order__form");

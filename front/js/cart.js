@@ -2,17 +2,11 @@
 
 let sofaInLocalStorage = localStorage.getItem('sofa');
 
-
-// Récupération de "cart__items" 
-
 var cartItems = document.getElementById('cart__items');
 
-// Si le panier est vide on affichera "panier vide" sinon on utilise la fonction displayProductBasket 
+// Si le panier est vide on renvoi sur la page index.html
 
 if (sofaInLocalStorage == null) {
-    /*var creapEmpty = document.createElement('p');
-    creapEmpty.textContent = 'Votre panier d\'achat est vide, veuillez choisir un ou plusieurs canapé(s) depuis la page d\'accueil de Kanap.';
-    cartItems.appendChild(creapEmpty);*/
 
     alert('Votre panier d\'achat est vide, veuillez choisir un ou plusieurs canapé(s) depuis la page d\'accueil de Kanap.');
     window.location.href = "index.html";
@@ -109,7 +103,7 @@ function displayProductBasket(basketProduct, product) {
     creaDivContentsQuantity.className = 'cart__item__content__settings__quantity';
     creaDivContentSet.appendChild(creaDivContentsQuantity);
 
-    // Insertion du paragraphe quantity
+    // Insertion du paragraphe quantité
 
     var creapQuantity = document.createElement('p');
     creapQuantity.textContent = "Qté :";

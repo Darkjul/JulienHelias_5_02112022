@@ -10,23 +10,19 @@ var cartItems = document.getElementById('cart__items');
 
 if (sofaInLocalStorage == null) {
 
-    /*var creapEmpty = document.createElement('p');
-    creapEmpty.textContent = 'Votre panier d\'achat est vide, veuillez choisir un ou plusieurs canapé(s) depuis la page d\'accueil de Kanap.';
-    cartItems.appendChild(creapEmpty);*/
-
     alert('Votre panier d\'achat est vide, veuillez choisir un ou plusieurs canapé(s) depuis la page d\'accueil de Kanap.');
     window.location.href = "index.html";
 
 }
 
-var totalPrice = 0;
+/*var totalPrice = 0;*/
 
 var kanapBasket = JSON.parse(sofaInLocalStorage);
 console.log(kanapBasket);
 
 for (var i = 0; i < kanapBasket.length; i++) {
 
-    let basketProduct = kanapBasket[i];
+    var basketProduct = kanapBasket[i];
 
     fetch("http://localhost:3000/api/products/" + basketProduct.id)
         .then(response => response.json())
@@ -48,7 +44,7 @@ function displayProductBasket(basketProduct, product) {
 
     // Insertion Des Canapés
 
-    var creaArticle = document.createElement('article');
+    let creaArticle = document.createElement('article');
     creaArticle.className = 'cart__item';
     creaArticle.setAttribute('data-id', basketProduct.id);
     creaArticle.setAttribute('data-color', basketProduct.color);
@@ -56,68 +52,68 @@ function displayProductBasket(basketProduct, product) {
 
     // Insertion de la div contenant l'image
 
-    var creaDivImage = document.createElement('div');
+    let creaDivImage = document.createElement('div');
     creaDivImage.className = 'cart__item__img';
     creaArticle.appendChild(creaDivImage);
 
     // Insertion des images
 
-    var creaImage = document.createElement('img');
+    let creaImage = document.createElement('img');
     creaImage.setAttribute('src', product.imageUrl);
     creaImage.setAttribute('alt', "Photographie d'un canapé");
     creaDivImage.appendChild(creaImage);
 
     // Insertion de la div contenant la description
 
-    var creaDivContentDes = document.createElement('div');
+    let creaDivContentDes = document.createElement('div');
     creaDivContentDes.className = 'cart__item__content';
     creaArticle.appendChild(creaDivContentDes);
 
     // Insertion de la div de description
 
-    var creaDivDescription = document.createElement('div');
+    let creaDivDescription = document.createElement('div');
     creaDivDescription.className = 'cart__item__content__description';
     creaDivContentDes.appendChild(creaDivDescription);
 
     // Insertion du titre H2
 
-    var creaTitle = document.createElement('h2');
+    let creaTitle = document.createElement('h2');
     creaTitle.textContent = product.name;
     creaDivDescription.appendChild(creaTitle);
 
     // Insertion du Paragraphe couleur
 
-    var creaParaColor = document.createElement('p');
+    let creaParaColor = document.createElement('p');
     creaParaColor.textContent = "Couleur : " + basketProduct.color;
     creaDivDescription.appendChild(creaParaColor);
 
     // Insertion du Paragraphe prix
 
-    var creapPrice = document.createElement('p');
+    let creapPrice = document.createElement('p');
     creapPrice.textContent = "Prix : " + product.price + " € / Canapé";
     creaDivDescription.appendChild(creapPrice);
 
     // Insertion de la div content settings
 
-    var creaDivContentSet = document.createElement('div');
+    let creaDivContentSet = document.createElement('div');
     creaDivContentSet.className = 'cart__item__content__settings';
     creaDivContentDes.appendChild(creaDivContentSet);
 
     // Insertion de la div settings quantity
 
-    var creaDivContentsQuantity = document.createElement('div');
+    let creaDivContentsQuantity = document.createElement('div');
     creaDivContentsQuantity.className = 'cart__item__content__settings__quantity';
     creaDivContentSet.appendChild(creaDivContentsQuantity);
 
     // Insertion du paragraphe quantité
 
-    var creapQuantity = document.createElement('p');
+    let creapQuantity = document.createElement('p');
     creapQuantity.textContent = "Qté :";
     creaDivContentsQuantity.appendChild(creapQuantity);
 
     // Insertion de la quantité de sofa globale
 
-    var creaInputQuantSofa = document.createElement('input');
+    let creaInputQuantSofa = document.createElement('input');
     creaInputQuantSofa.className = 'itemQuantity';
     creaInputQuantSofa.setAttribute('type', 'number');
     creaInputQuantSofa.setAttribute('name', 'itemQuantity');
@@ -126,224 +122,68 @@ function displayProductBasket(basketProduct, product) {
     creaInputQuantSofa.setAttribute('value', basketProduct.quantity);
     creaDivContentsQuantity.appendChild(creaInputQuantSofa);
 
+    /*creaInputQuantSofa.addEventListener('change', (event) => {
+        event.preventDefault();
+        changeQuantity(event);
+    })*/
+
     // Insertion de la div settings delete
 
-    var creaDivContentsDelete = document.createElement('div');
+    let creaDivContentsDelete = document.createElement('div');
     creaDivContentsDelete.className = 'cart__item__content__settings__delete';
     creaDivContentSet.appendChild(creaDivContentsDelete);
 
     // Insertion du paragraphe supprimer
 
-    var creapDelete = document.createElement('p');
+    let creapDelete = document.createElement('p');
     creapDelete.className = 'deleteItem';
     creapDelete.textContent = "Supprimer";
     creaDivContentsDelete.appendChild(creapDelete);
+
+    /*creapDelete.addEventListener('click', (event) => {
+        event.preventDefault();
+        deleteArticle(event);
+    })*/
+
+
 }
 
-// Modification de la quantité de canapé dans le panier
+totalQuantity()
+totalPrice();
 
-function changeQuantity() {
 
-    let sofaQuantity = document.querySelectorAll('.itemQuantity');
+// Fonction de calcul de la quantité totale de canapé du panier
 
-    for (let j = 0; j < sofaQuantity.length; j++) {
+function totalQuantity() {
 
-        sofaQuantity[j].addEventListener('change', (event) => {
+    const getTotalQuantity = document.getElementById('totalQuantity');
+    const cart = JSON.parse(localStorage.getItem('sofa'));
+    let totalQuantity = [];
 
-            event.preventDefault();
+    let totalQty = 0;
 
-            // Choix de la nouvelle quantité qui sera sauvegardé dans le Local Storage avec les éléments déjà présent
-
-            let sofaNewQty = sofaQuantity[j].value;
-
-            const updatedLocalStorage = {
-                id: sofaInLocalStorage[j].id,
-                image: sofaInLocalStorage[j].image,
-                alt: sofaInLocalStorage[j].alt,
-                name: sofaInLocalStorage[j].name,
-                color: sofaInLocalStorage[j].color,
-                price: sofaInLocalStorage[j].price,
-                quantity: sofaNewQty,
-            };
-
-            // Actualisation du Local Storage avec les nouvelles entrées 
-
-            sofaInLocalStorage[j] = updatedLocalStorage;
-
-            localStorage.setItem('sofa', JSON.stringify(sofaInLocalStorage));
-
-            // Alerte pour avertir de la MAJ du panier
-
-            alert('Votre panier a été mis à jour.');
-            totalSofa();
-            finalBasketPrice();
-        })
+    for (let article of cart) {
+        totalQty += parseInt(article.quantity);
     }
+    totalQuantity.push(totalQty);
+
+    getTotalQuantity.innerText = totalQty;
 }
-changeQuantity();
 
-// Suppression d'un produit du panier
+// Fonction de calcul du prix total de tous les canapés du panier
 
-function deleteArticle() {
+function totalPrice() {
 
-    const deleteSofa = document.querySelectorAll('.deleteItem');
+    let getTotalPrice = document.getElementById('totalPrice');
+    let getQuantity = document.querySelectorAll('.itemQuantity');
+    let getAllCartPrice = document.querySelectorAll("cart__item__content__description");
 
-    for (let k = 0; k < deleteSofa.length; k++) {
+    let sofaPrice = 0;
 
-        deleteSofa[k].addEventListener('click', (event) => {
-            event.preventDefault();
+    for (let j = 0; j < getAllCartPrice.length; j++) {
 
-            // Enregistrement de l'id et de la couleur séléctionnés pour suppression
-
-            let delID = sofaInLocalStorage[k].id;
-            let delColor = sofaInLocalStorage[k].color;
-
-            // Filtration de l'élément du click           
-
-            sofaInLocalStorage = sofaInLocalStorage.filter(elt => elt.id !== delID || elt.color !== delColor);
-
-            // Actualisation du Local Storage avec les nouvelles entrées 
-
-            localStorage.setItem('sofa', JSON.stringify(sofaInLocalStorage));
-
-            // Alerte pour avertir de la MAJ du panier
-
-            alert('Votre canapé a bien été supprimé.');
-            window.location.href = "cart.html";
-        });
+        sofaPrice += parseInt(getAllCartPrice[j].lastElementChild.textContent) * getQuantity[j].value;
     }
+    getTotalPrice.innerText = sofaPrice;
 }
-deleteArticle();
 
-// Affichage du total des canapés dans le panier
-
-function totalSofa() {
-
-    let totalSofas = 0;
-
-    for (l in sofaInLocalStorage) {
-
-        // On convertit la valeur 'quantité' dans le Local Storage en une chaîne et on renvoit un entier décimal
-
-        const newSofaQuantity = parseInt(sofaInLocalStorage[l].quantity, 10);
-
-        // attribuer la valeur retournée par parseInt à la variable totalSofas
-
-        totalSofas += newSofaQuantity;
-    }
-
-    // On attribut à #totalQuantity la valeur de totalSofas
-
-    const totalQuantity = document.getElementById('totalQuantity');
-    totalQuantity.textContent = totalSofas;
-}
-totalSofa();
-
-// Calcul du montant total du panier
-
-function finalBasketPrice() {
-
-    const priceCalc = [];
-
-    for (m = 0; m < sofaInLocalStorage.length; m++) {
-
-        // Calcul du prix de l'article par quantité * prix
-
-        const basketAmount = sofaInLocalStorage[m].price * sofaInLocalStorage[m].quantity;
-        priceCalc.push(basketAmount);
-
-        // Reduce() permet de garder en mémoire les résultats de l'opération demandée en accumulant les valeurs tout en gardant la valeur courante
-
-        const redux = (previousValue, currentValue) => previousValue + currentValue;
-        total = priceCalc.reduce(redux);
-    }
-    const finalTotalPrice = document.getElementById('totalPrice');
-
-    finalTotalPrice.textContent = total;
-}
-finalBasketPrice();
-
-// Validation du formulaire de commande
-
-let formKanap = document.querySelector(".cart__order__form");
-
-// ReGex
-
-var adressRegExp = new RegExp("^[A-zÀ-ú0-9 ,.'\-]+$");
-var nameRegExp = new RegExp("^[A-zÀ-ú \-]+$");
-var mailRegExp = new RegExp("^[a-zA-Z0-9_. -]+@[a-zA-Z.-]+[.]{1}[a-z]{2,10}$");
-
-var firstNameErrorMsg = document.getElementById('firstNameErrorMsg');
-
-formKanap.firstName.addEventListener('change', function (e) {
-
-    var value = e.target.value;
-
-    if (nameRegExp.test(value)) {
-        return true;
-    }
-
-    else {
-        firstNameErrorMsg.innerText = 'Réponse incorrecte, veuillez renseigner votre prénom.';
-    }
-});
-
-let lastNameErrorMsg = formKanap.lastName.nextElementSibling;
-
-formKanap.lastName.addEventListener('change', function (e) {
-
-    var value = e.target.value;
-
-    if (nameRegExp.test(value)) {
-        return true;
-    }
-
-    else {
-        lastNameErrorMsg.innerText = 'Réponse incorrecte, veuillez renseigner votre nom.';
-    }
-});
-
-var adressErrorMsg = document.getElementById('addressErrorMsg');
-
-formKanap.address.addEventListener('change', function (e) {
-
-    var value = e.target.value;
-
-    if (adressRegExp.test(value)) {
-        return true;
-    }
-
-    else {
-        adressErrorMsg.innerText = 'Réponse incorrecte, veuillez renseigner votre adresse postale.';
-    }
-});
-
-var cityErrorMsg = document.getElementById('cityErrorMsg');
-
-formKanap.city.addEventListener('change', function (e) {
-
-    var value = e.target.value;
-
-    if (nameRegExp.test(value)) {
-        return true;
-    }
-
-    else {
-        cityErrorMsg.innerText = 'Réponse incorrecte, veuillez renseigner votre ville.';
-    }
-});
-
-var emailErrorMsg = document.getElementById('emailErrorMsg');
-
-formKanap.email.addEventListener('change', function (e) {
-
-    var value = e.target.value;
-
-    if (mailRegExp.test(value)) {
-        return true;
-    }
-
-    else {
-        emailErrorMsg.innerText = 'Réponse incorrecte, veuillez renseigner votre adresse email.';
-    }
-});

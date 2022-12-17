@@ -10,7 +10,6 @@ fetch("http://localhost:3000/api/products/" + newID)
         console.log(data);
 
         document.title = data.name;
-
         displaySofa(data);
     })
 
@@ -18,37 +17,41 @@ fetch("http://localhost:3000/api/products/" + newID)
         console.log('Erreur Serveur Detectée ', error);
     });
 
-
-
-function displaySofa() {
+function displaySofa(formSofa) {
 
     let sofaImage = document.querySelector('.item__img');
 
     // Insertion image du canapé
+
     var creaSofaImage = document.createElement('img');
     creaSofaImage.setAttribute('src', formSofa.imageUrl);
     creaSofaImage.setAttribute('alt', formSofa.altTxt);
     sofaImage.appendChild(creaSofaImage);
 
     // Insertion nom du canapé
+
     let sofaTitle = document.getElementById('title');
     sofaTitle.textContent = formSofa.name;
 
     // Insertion du prix du canapé
+
     let sofaPrice = document.getElementById('price');
     sofaPrice.textContent = formSofa.price;
 
     // Insertion de la description du canapé
+
     let sofaDescription = document.getElementById('description');
     sofaDescription.textContent = formSofa.description;
 
     // Récupération des couleurs possibles du canapé
+
     let sofaOption = document.getElementById('colors');
 
     // Insertion des couleurs dans une variable
+
     var colors = formSofa.colors;
 
-    // Lecture du tableau des couleurs et insertion de celles-ci dans les disponibilités
+    // Lecture du tableau des couleurs et insertion de celles-ci dans les disponibilités 
 
     for (let colorSofa of colors) {
         var creaOption = document.createElement('option');
@@ -125,3 +128,4 @@ addToCart.addEventListener('click', (event) => {
     alert('Votre choix de canapé a bien été ajouté à votre panier');
 
 });
+

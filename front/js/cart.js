@@ -174,9 +174,9 @@ function totalQuantity() {
 
 function totalPrice() {
 
-    let getTotalPrice = document.getElementById('totalPrice');
+    const getTotalPrice = document.getElementById('totalPrice');
     let getQuantity = document.querySelectorAll('.itemQuantity');
-    let getAllCartPrice = document.querySelectorAll("cart__item__content__description");
+    let getAllCartPrice = document.querySelectorAll('cart__item__content__description');
 
     let sofaPrice = 0;
 
@@ -187,3 +187,100 @@ function totalPrice() {
     getTotalPrice.innerText = sofaPrice;
 }
 
+/*// Modification de la quantité de canapé dans le panier
+
+function changeQuantity(event) {
+
+    console.log(event.target)
+
+    let inputQuantity = event.target;
+
+    console.log(inputQuantity.closest('article'))
+
+    let articleProduct = inputQuantity.closest('article');
+
+    console.log(inputQuantity.value)
+
+    alert('Votre modification a bien été prise en compte');*/
+
+
+// ReGex
+
+var adressRegExp = new RegExp("^[A-zÀ-ú0-9 ,.'\-]+$");
+var nameRegExp = new RegExp("^[A-zÀ-ú \-]+$");
+var mailRegExp = new RegExp("^[A-Z0-9+_.-]+@[A-Z0-9.-]+$");
+
+var firstNameErrorMsg = document.getElementById('firstNameErrorMsg');
+
+formKanap.firstName.addEventListener('change', function (e) {
+
+    var value = e.target.value;
+
+    if (nameRegExp.test(value)) {
+        return true;
+    }
+
+    else {
+        firstNameErrorMsg.innerText = 'Réponse incorrecte, veuillez renseigner votre prénom.';
+    }
+});
+
+let lastNameErrorMsg = formKanap.lastName.nextElementSibling;
+
+formKanap.lastName.addEventListener('change', function (e) {
+
+    var value = e.target.value;
+
+    if (nameRegExp.test(value)) {
+        return true;
+    }
+
+    else {
+        lastNameErrorMsg.innerText = 'Réponse incorrecte, veuillez renseigner votre nom.';
+    }
+});
+
+var adressErrorMsg = document.getElementById('addressErrorMsg');
+
+formKanap.address.addEventListener('change', function (e) {
+
+    var value = e.target.value;
+
+    if (adressRegExp.test(value)) {
+        return true;
+    }
+
+    else {
+        adressErrorMsg.innerText = 'Réponse incorrecte, veuillez renseigner votre adresse postale.';
+    }
+});
+
+var cityErrorMsg = document.getElementById('cityErrorMsg');
+
+formKanap.city.addEventListener('change', function (e) {
+
+    var value = e.target.value;
+
+    if (nameRegExp.test(value)) {
+        return true;
+    }
+
+    else {
+        cityErrorMsg.innerText = 'Réponse incorrecte, veuillez renseigner votre ville.';
+    }
+});
+
+var emailErrorMsg = document.getElementById('emailErrorMsg');
+
+formKanap.email.addEventListener('change', function (e) {
+
+    var value = e.target.value;
+
+    if (mailRegExp.test(value)) {
+        return true;
+    }
+
+    else {
+        emailErrorMsg.innerText = 'Réponse incorrecte, veuillez renseigner votre adresse email.';
+    }
+});

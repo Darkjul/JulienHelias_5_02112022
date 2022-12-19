@@ -18,11 +18,11 @@ if (sofaInLocalStorage == null) {
 /*var totalPrice = 0;*/
 
 var kanapBasket = JSON.parse(sofaInLocalStorage);
+document.getElementById('totalPrice').innerText = 0;
 console.log(kanapBasket);
 
-for (var i = 0; i < kanapBasket.length; i++) {
+for (let basketProduct of kanapBasket) {
 
-    var basketProduct = kanapBasket[i];
 
     fetch("http://localhost:3000/api/products/" + basketProduct.id)
         .then(response => response.json())
@@ -30,6 +30,7 @@ for (var i = 0; i < kanapBasket.length; i++) {
             console.log('product', product);
             console.log('LS', basketProduct);
             displayProductBasket(basketProduct, product);
+            totalPrice(product.price * basketProduct.quantity);
         })
 
         .catch(error => {
@@ -149,7 +150,7 @@ function displayProductBasket(basketProduct, product) {
 }
 
 totalQuantity()
-totalPrice();
+
 
 
 // Fonction de calcul de la quantité totale de canapé du panier
@@ -172,19 +173,17 @@ function totalQuantity() {
 
 // Fonction de calcul du prix total de tous les canapés du panier
 
-function totalPrice() {
+function totalPrice(priceProduct) {
 
+    // 1 - Récupération du prix actuel
     const getTotalPrice = document.getElementById('totalPrice');
-    let getQuantity = document.querySelectorAll('.itemQuantity');
-    let getAllCartPrice = document.querySelectorAll('cart__item__content__description');
 
-    let sofaPrice = 0;
+    // 2 - Calcul du prix actuel + nouveaux prix param fonction
+    let newPrice = parseInt(getTotalPrice.textContent) + priceProduct;
 
-    for (let j = 0; j < getAllCartPrice.length; j++) {
+    //3 - Insertion du résultat sur la page html
+    getTotalPrice.innerText = newPrice;
 
-        sofaPrice += parseInt(getAllCartPrice[j].lastElementChild.textContent) * getQuantity[j].value;
-    }
-    getTotalPrice.innerText = sofaPrice;
 }
 
 /*// Modification de la quantité de canapé dans le panier
@@ -204,11 +203,17 @@ function changeQuantity(event) {
     alert('Votre modification a bien été prise en compte');*/
 
 
+
+
+// Validation du formulaire de commande
+
+let formKanap = document.querySelector(".cart__order__form");
+
 // ReGex
 
 var adressRegExp = new RegExp("^[A-zÀ-ú0-9 ,.'\-]+$");
 var nameRegExp = new RegExp("^[A-zÀ-ú \-]+$");
-var mailRegExp = new RegExp("^[A-Z0-9+_.-]+@[A-Z0-9.-]+$");
+var mailRegExp = new RegExp("^[A-Za-z0-9+_.-]+@(.+)$");
 
 var firstNameErrorMsg = document.getElementById('firstNameErrorMsg');
 

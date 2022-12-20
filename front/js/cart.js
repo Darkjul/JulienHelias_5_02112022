@@ -15,8 +15,6 @@ if (sofaInLocalStorage == null) {
 
 }
 
-/*var totalPrice = 0;*/
-
 var kanapBasket = JSON.parse(sofaInLocalStorage);
 document.getElementById('totalPrice').innerText = 0;
 console.log(kanapBasket);
@@ -151,15 +149,17 @@ function displayProductBasket(basketProduct, product) {
 
 totalQuantity()
 
-
-
 // Fonction de calcul de la quantité totale de canapé du panier
 
 function totalQuantity() {
 
+    // 1 - Récupération de la quantité actuelle
+
     const getTotalQuantity = document.getElementById('totalQuantity');
     const cart = JSON.parse(localStorage.getItem('sofa'));
     let totalQuantity = [];
+
+    // 2 - Calcul de la quantité totale des articles
 
     let totalQty = 0;
 
@@ -167,6 +167,8 @@ function totalQuantity() {
         totalQty += parseInt(article.quantity);
     }
     totalQuantity.push(totalQty);
+
+    // 3 - Insertion du résultat sur la page html
 
     getTotalQuantity.innerText = totalQty;
 }
@@ -176,12 +178,15 @@ function totalQuantity() {
 function totalPrice(priceProduct) {
 
     // 1 - Récupération du prix actuel
+
     const getTotalPrice = document.getElementById('totalPrice');
 
     // 2 - Calcul du prix actuel + nouveaux prix param fonction
+
     let newPrice = parseInt(getTotalPrice.textContent) + priceProduct;
 
-    //3 - Insertion du résultat sur la page html
+    // 3 - Insertion du résultat sur la page html
+
     getTotalPrice.innerText = newPrice;
 
 }
@@ -211,15 +216,19 @@ let formKanap = document.querySelector(".cart__order__form");
 
 // ReGex
 
-var adressRegExp = new RegExp("^[A-zÀ-ú0-9 ,.'\-]+$");
+// Définition des variables de contrôle ReGex du formulaire
+
 var nameRegExp = new RegExp("^[A-zÀ-ú \-]+$");
-var mailRegExp = new RegExp("^[A-Za-z0-9+_.-]+@(.+)$");
+var adressRegExp = new RegExp("^[A-zÀ-ú0-9 ,.'\-]+$");
+var mailRegExp = new RegExp("^[A-Za-z0-9+_.-]+@[a-zA-Z.-]+[.][a-z]{2,4}$");
+
+// Verification du Prénom
 
 var firstNameErrorMsg = document.getElementById('firstNameErrorMsg');
 
-formKanap.firstName.addEventListener('change', function (e) {
+formKanap.firstName.addEventListener('change', function (event) {
 
-    var value = e.target.value;
+    var value = event.target.value;
 
     if (nameRegExp.test(value)) {
         return true;
@@ -230,11 +239,13 @@ formKanap.firstName.addEventListener('change', function (e) {
     }
 });
 
+// Verification du Nom
+
 let lastNameErrorMsg = formKanap.lastName.nextElementSibling;
 
-formKanap.lastName.addEventListener('change', function (e) {
+formKanap.lastName.addEventListener('change', function (event) {
 
-    var value = e.target.value;
+    var value = event.target.value;
 
     if (nameRegExp.test(value)) {
         return true;
@@ -245,11 +256,13 @@ formKanap.lastName.addEventListener('change', function (e) {
     }
 });
 
+// Verification de l'adresse
+
 var adressErrorMsg = document.getElementById('addressErrorMsg');
 
-formKanap.address.addEventListener('change', function (e) {
+formKanap.address.addEventListener('change', function (event) {
 
-    var value = e.target.value;
+    var value = event.target.value;
 
     if (adressRegExp.test(value)) {
         return true;
@@ -260,11 +273,13 @@ formKanap.address.addEventListener('change', function (e) {
     }
 });
 
+// Verification de la ville
+
 var cityErrorMsg = document.getElementById('cityErrorMsg');
 
-formKanap.city.addEventListener('change', function (e) {
+formKanap.city.addEventListener('change', function (event) {
 
-    var value = e.target.value;
+    var value = event.target.value;
 
     if (nameRegExp.test(value)) {
         return true;
@@ -275,11 +290,13 @@ formKanap.city.addEventListener('change', function (e) {
     }
 });
 
+// Verification de l'E-mail
+
 var emailErrorMsg = document.getElementById('emailErrorMsg');
 
-formKanap.email.addEventListener('change', function (e) {
+formKanap.email.addEventListener('change', function (event) {
 
-    var value = e.target.value;
+    var value = event.target.value;
 
     if (mailRegExp.test(value)) {
         return true;

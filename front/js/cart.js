@@ -121,10 +121,10 @@ function displayProductBasket(basketProduct, product) {
     creaInputQuantSofa.setAttribute('value', basketProduct.quantity);
     creaDivContentsQuantity.appendChild(creaInputQuantSofa);
 
-    /*creaInputQuantSofa.addEventListener('change', (event) => {
+    creaInputQuantSofa.addEventListener('change', (event) => {
         event.preventDefault();
         changeQuantity(event);
-    })*/
+    })
 
     // Insertion de la div settings delete
 
@@ -139,15 +139,18 @@ function displayProductBasket(basketProduct, product) {
     creapDelete.textContent = "Supprimer";
     creaDivContentsDelete.appendChild(creapDelete);
 
-    /*creapDelete.addEventListener('click', (event) => {
-        event.preventDefault();
-        deleteArticle(event);
-    })*/
 
+    const dataId = creapDelete.closest(".cart__item").dataset.id;
+    const dataColor = creapDelete.closest(".cart__item").dataset.color;
+
+    creapDelete.addEventListener('click', (event) => {
+        event.preventDefault();
+        deleteArticle(dataId, dataColor);
+    })
 
 }
 
-totalQuantity()
+totalQuantity();
 
 // Fonction de calcul de la quantité totale de canapé du panier
 
@@ -191,6 +194,23 @@ function totalPrice(priceProduct) {
 
 }
 
+// Suppression d'un produit du panier en fonction de son ID et sa Couleur
+
+function deleteArticle(dataId, dataColor) {
+
+    const cart = JSON.parse(localStorage.getItem('sofa'));
+
+    const cartFilter = cart.filter(
+        (article) =>
+            (article.id !== dataId && article.color !== dataColor) || (article.id === dataId && article.color !== dataColor)
+    );
+
+    let reloadCart = cartFilter;
+
+    localStorage.setItem('sofa', JSON.stringify(reloadCart));
+    location.reload();
+}
+
 /*// Modification de la quantité de canapé dans le panier
 
 function changeQuantity(event) {
@@ -206,8 +226,6 @@ function changeQuantity(event) {
     console.log(inputQuantity.value)
 
     alert('Votre modification a bien été prise en compte');*/
-
-
 
 
 // Validation du formulaire de commande

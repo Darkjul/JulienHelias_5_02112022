@@ -6,7 +6,7 @@ let sofaInLocalStorage = localStorage.getItem('sofa');
 
 var cartItems = document.getElementById('cart__items');
 
-// Si le panier est vide on renvoi sur la page index.html sinon la fonction displayProductBasket prednra la suite
+// Si le panier est vide on renvoi sur la page index.html sinon la fonction displayProductBasket prendra la suite
 
 if (sofaInLocalStorage == null) {
 
@@ -194,11 +194,15 @@ function totalPrice(priceProduct) {
 
 }
 
-// Suppression d'un produit du panier en fonction de son ID et sa Couleur
+// Suppression d'un produit du panier
 
 function deleteArticle(dataId, dataColor) {
 
+    // On récupère le panier stocké dans le Local Storage
+
     const cart = JSON.parse(localStorage.getItem('sofa'));
+
+    // Le produit à supprimer est filtré par son ID et sa couleur
 
     const cartFilter = cart.filter(
         (article) =>
@@ -207,11 +211,16 @@ function deleteArticle(dataId, dataColor) {
 
     let reloadCart = cartFilter;
 
+    // On sauvegarde la modification dans le Local Storage
+
     localStorage.setItem('sofa', JSON.stringify(reloadCart));
-    location.reload();
+
+    // On recharge la page panier avec les modifications 
+
+    window.location.reload();
 }
 
-/*// Modification de la quantité de canapé dans le panier
+// Modification de la quantité de canapé dans le panier
 
 function changeQuantity(event) {
 
@@ -225,8 +234,39 @@ function changeQuantity(event) {
 
     console.log(inputQuantity.value)
 
-    alert('Votre modification a bien été prise en compte');*/
+    const newQuantity = inputQuantity.value;
 
+    // On récupère le panier stocké dans le LS
+
+    let cart = JSON.parse(localStorage.getItem('sofa'));
+
+    // On crée des variables de récuperation de l'ID et de la couleur
+
+    let getSofaID = articleProduct.getAttribute("data-id");
+    let getSofaColor = articleProduct.getAttribute("data-color");
+
+    for (let i = 0; i < cart.length; i++) {
+
+        const sofaActInLs = cart[i];
+
+        // On vérifie l'ID et la couleur du Sofa pour sauvegarder sa nouvelle quantité
+
+        if (getSofaID === sofaActInLs.id && getSofaColor === sofaActInLs.color) {
+
+            sofaActInLs.quantity = newQuantity;
+
+            // On sauvegarde la modification dans le Local Storage
+
+            localStorage.setItem('sofa', JSON.stringify(cart));
+        }
+    }
+
+    // On recharge la page panier avec les modifications 
+
+    window.location.reload();
+}
+
+/*alert('Votre modification a bien été prise en compte');*/
 
 // Validation du formulaire de commande
 

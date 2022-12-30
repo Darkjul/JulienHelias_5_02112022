@@ -110,6 +110,9 @@ function displayProductBasket(basketProduct, product) {
     creapQuantity.textContent = "Qté :";
     creaDivContentsQuantity.appendChild(creapQuantity);
 
+    const dataQtyId = creapQuantity.closest(".cart__item").dataset.id;
+    const dataQtyColor = creapQuantity.closest(".cart__item").dataset.color;
+
     // Insertion de la quantité de sofa globale
 
     let creaInputQuantSofa = document.createElement('input');
@@ -124,6 +127,7 @@ function displayProductBasket(basketProduct, product) {
     creaInputQuantSofa.addEventListener('change', (event) => {
         event.preventDefault();
         changeQuantity(event);
+        updateLocalStorage(dataQtyColor, dataQtyId);
     })
 
     // Insertion de la div settings delete
@@ -140,12 +144,13 @@ function displayProductBasket(basketProduct, product) {
     creaDivContentsDelete.appendChild(creapDelete);
 
 
-    const dataId = creapDelete.closest(".cart__item").dataset.id;
-    const dataColor = creapDelete.closest(".cart__item").dataset.color;
+    const dataSofaId = creapDelete.closest(".cart__item").dataset.id;
+    const dataSofaColor = creapDelete.closest(".cart__item").dataset.color;
 
     creapDelete.addEventListener('click', (event) => {
         event.preventDefault();
-        deleteArticle(dataId, dataColor);
+        deleteArticle(dataSofaId, dataSofaColor);
+        updateLocalStorage(dataQtyColor, dataQtyId);
     })
 
 }
@@ -196,7 +201,7 @@ function totalPrice(priceProduct) {
 
 // Suppression d'un produit du panier
 
-function deleteArticle(dataId, dataColor) {
+function deleteArticle(dataSofaId, dataSofaColor) {
 
     // On récupère le panier stocké dans le Local Storage
 
@@ -206,7 +211,7 @@ function deleteArticle(dataId, dataColor) {
 
     const cartFilter = cart.filter(
         (article) =>
-            (article.id !== dataId && article.color !== dataColor) || (article.id === dataId && article.color !== dataColor)
+            (article.id !== dataSofaId && article.color !== dataSofaColor) || (article.id === dataSofaId && article.color !== dataSofaColor)
     );
 
     let reloadCart = cartFilter;
@@ -267,6 +272,33 @@ function changeQuantity(event) {
 }
 
 /*alert('Votre modification a bien été prise en compte');*/
+
+// Mise à jour du Local Storage en lien avec les fonctions modifQuantity et deleteArticle
+
+function updateLocalStorage(event, dataQtyId, dataQtyColor) {
+
+    // On récupère le panier stocké dans le LS
+
+    const cart = JSON.parse(localStorage.getItem('sofa'));
+
+    for (let article of cart) {
+
+        // On vérifie l'ID et la couleur du Sofa pour actualiser correctement le Local Storage
+
+        if (article.id === dataQtyId && article.color === dataQtyColor) {
+
+            article.quantity = event.target.value;
+
+            // On actualise le Local Storage
+
+            localStorage.setItem('sofa', JSON.stringify(cart));
+
+            // On recharge la page panier avec les modifications 
+
+            window.location.reload();
+        }
+    }
+}
 
 // Validation du formulaire de commande
 

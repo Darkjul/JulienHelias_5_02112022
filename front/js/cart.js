@@ -287,7 +287,20 @@ function updateLocalStorage(event, dataQtyId, dataQtyColor) {
 
         if (article.id === dataQtyId && article.color === dataQtyColor) {
 
-            article.quantity = event.target.value;
+            // On check si la quantité de canapé à une valeur autorisée
+
+            if (article.quantity > 0 && article.quantity < 101) {
+
+                article.quantity = event.target.value;
+
+            } else {
+
+                alert("Veuillez saisir une quantité comprise entre 1 et 100 !");
+
+                // Si quantité de canapé négative on force la valeur à 1
+
+                article.quantity = 1;
+            }
 
             // On actualise le Local Storage
 

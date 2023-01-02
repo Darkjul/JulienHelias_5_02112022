@@ -110,9 +110,6 @@ function displayProductBasket(basketProduct, product) {
     creapQuantity.textContent = "Qté :";
     creaDivContentsQuantity.appendChild(creapQuantity);
 
-    const dataQtyId = creapQuantity.closest(".cart__item").dataset.id;
-    const dataQtyColor = creapQuantity.closest(".cart__item").dataset.color;
-
     // Insertion de la quantité de sofa globale
 
     let creaInputQuantSofa = document.createElement('input');
@@ -127,7 +124,6 @@ function displayProductBasket(basketProduct, product) {
     creaInputQuantSofa.addEventListener('change', (event) => {
         event.preventDefault();
         changeQuantity(event);
-        updateLocalStorage(dataQtyColor, dataQtyId);
     })
 
     // Insertion de la div settings delete
@@ -150,7 +146,6 @@ function displayProductBasket(basketProduct, product) {
     creapDelete.addEventListener('click', (event) => {
         event.preventDefault();
         deleteArticle(dataSofaId, dataSofaColor);
-        updateLocalStorage(dataQtyColor, dataQtyId);
     })
 
 }
@@ -241,6 +236,14 @@ function changeQuantity(event) {
 
     const newQuantity = inputQuantity.value;
 
+    // Contrôle de la quantité modifiée, si inférieure à 1 ou supérieur à 100 on affiche l'alerte
+
+    if (newQuantity < 1 || newQuantity > 100) {
+
+        alert('Veuillez insérer une quatité entre 1 et 100');
+        return;
+    }
+
     // On récupère le panier stocké dans le LS
 
     let cart = JSON.parse(localStorage.getItem('sofa'));
@@ -271,47 +274,6 @@ function changeQuantity(event) {
     window.location.reload();
 }
 
-/*alert('Votre modification a bien été prise en compte');*/
-
-// Mise à jour du Local Storage en lien avec les fonctions modifQuantity et deleteArticle
-
-function updateLocalStorage(event, dataQtyId, dataQtyColor) {
-
-    // On récupère le panier stocké dans le LS
-
-    const cart = JSON.parse(localStorage.getItem('sofa'));
-
-    for (let article of cart) {
-
-        // On vérifie l'ID et la couleur du Sofa pour actualiser correctement le Local Storage
-
-        if (article.id === dataQtyId && article.color === dataQtyColor) {
-
-            // On check si la quantité de canapé à une valeur autorisée
-
-            if (article.quantity > 0 && article.quantity < 101) {
-
-                article.quantity = event.target.value;
-
-            } else {
-
-                alert("Veuillez saisir une quantité comprise entre 1 et 100 !");
-
-                // Si quantité de canapé négative on force la valeur à 1
-
-                article.quantity = 1;
-            }
-
-            // On actualise le Local Storage
-
-            localStorage.setItem('sofa', JSON.stringify(cart));
-
-            // On recharge la page panier avec les modifications 
-
-            window.location.reload();
-        }
-    }
-}
 
 // Validation du formulaire de commande
 
@@ -323,7 +285,7 @@ let formKanap = document.querySelector(".cart__order__form");
 
 var nameRegExp = new RegExp("^[A-zÀ-ú \-]+$");
 var adressRegExp = new RegExp("^[A-zÀ-ú0-9 ,.'\-]+$");
-var mailRegExp = new RegExp("^[A-Za-z0-9+_.-]+@[a-zA-Z.-]+[.][a-z]{2,4}$");
+var mailRegExp = new RegExp("^[A-Za-z0-9+_.-]+@[a-zA-Z.-]+[.][a-z]{2,10}$");
 
 // Verification du Prénom
 

@@ -277,7 +277,19 @@ function changeQuantity(event) {
 
 // Validation du formulaire de commande
 
-let formKanap = document.querySelector(".cart__order__form");
+let products = [];
+const cart = kanapBasket;
+for (const article of cart) {
+    products.push(article.id);
+}
+
+// Récupération des élements de paragraphes pour afficher les messages d'erreurs correspondants
+
+let firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
+let lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
+let addressErrorMsg = document.getElementById("addressErrorMsg");
+let emailErrorMsg = document.getElementById("emailErrorMsg");
+let cityErrorMsg = document.getElementById("cityErrorMsg");
 
 // ReGex
 
@@ -287,87 +299,168 @@ var nameRegExp = new RegExp("^[A-zÀ-ú \-]+$");
 var adressRegExp = new RegExp("^[A-zÀ-ú0-9 ,.'\-]+$");
 var mailRegExp = new RegExp("^[A-Za-z0-9+_.-]+@[a-zA-Z.-]+[.][a-z]{2,10}$");
 
-// Verification du Prénom
+// On teste la correspondance ReGex dans une chaîne de caractère qui aura pour réponse vrai ou faux
 
-var firstNameErrorMsg = document.getElementById('firstNameErrorMsg');
+const testRegexName = (value) => {
+    return nameRegExp.test(value);
+};
 
-formKanap.firstName.addEventListener('change', function (event) {
+const testRegexAdress = (value) => {
+    return adressRegExp.test(value);
+};
 
-    var value = event.target.value;
+const testRegexEmail = (value) => {
+    return mailRegExp.test(value);
+};
 
-    if (nameRegExp.test(value)) {
+// Fonction de contrôle du prénom
+
+function checkFirstName() {
+
+    let inputFirstName = document.getElementById("firstName").value;
+
+    if (testRegexName(inputFirstName)) {
+        firstNameErrorMsg.textContent = "Prénom validé";
         return true;
-    }
 
-    else {
-        firstNameErrorMsg.innerText = 'Réponse incorrecte, veuillez renseigner votre prénom.';
+    } else {
+        firstNameErrorMsg.textContent = "Veuillez renseigner un prénom valide !";
+
+        return false;
     }
+}
+
+// Fonction de contrôle du nom
+
+function checkLastName() {
+
+    let inputLastName = document.getElementById("lastName").value;
+
+    if (testRegexName(inputLastName)) {
+        lastNameErrorMsg.textContent = "Nom validé";
+        return true;
+
+    } else {
+        lastNameErrorMsg.textContent = "Veuillez renseigner un nom valide !";
+
+        return false;
+    }
+}
+
+// Fonction de contrôle de la ville
+
+function checkCity() {
+
+    let inputCity = document.getElementById("city").value;
+
+    if (testRegexAdress(inputCity)) {
+        cityErrorMsg.textContent = "Ville validée";
+        return true;
+
+    } else {
+        cityErrorMsg.textContent = "Veuillez renseigner une ville valide !";
+
+        return false;
+    }
+}
+
+// Fonction de contrôle de l'adresse
+
+function checkAdress() {
+
+    let inputAddress = document.getElementById("address").value;
+
+    if (testRegexAdress(inputAddress)) {
+        addressErrorMsg.textContent = "Adresse validée";
+        return true;
+
+    } else {
+        addressErrorMsg.textContent = "Veuillez saisir une adresse valide !";
+
+        return false;
+    }
+}
+
+// Fonction de contrôle de l'adresse e-mail
+
+function checkEmail() {
+
+    let inputEmail = document.getElementById("email").value;
+
+    if (testRegexEmail(inputEmail)) {
+        emailErrorMsg.textContent = "E-Mail Validé";
+        return true;
+
+    } else {
+        emailErrorMsg.textContent = "Veuillez saisir une adresse email valide !";
+
+        return false;
+    }
+}
+
+// Création de la variable qui servira à la validation de la commande au clic du bouton "Commander"
+
+let orderButton = document.getElementById("order");
+
+orderButton.addEventListener("click", (event) => {
+    event.preventDefault(event);
+
+    // On sauvegarde les valeurs du formulaire client
+
+    contact = {
+        firstName: document.getElementById("firstName").value,
+        lastName: document.getElementById("lastName").value,
+        address: document.getElementById("address").value,
+        email: document.getElementById("email").value,
+        city: document.getElementById("city").value,
+    };
+
+    sendFinalOrder();
 });
 
-// Verification du Nom
+// Fonction qui envoie la requête POST d'envoi de la commande si le formulaire et valide
+// Récupération de l'orderId de la commande en retour et redirection vers la page confirmation.html
 
-let lastNameErrorMsg = formKanap.lastName.nextElementSibling;
+function sendFinalOrder() {
 
-formKanap.lastName.addEventListener('change', function (event) {
+    let cart = kanapBasket;
 
-    var value = event.target.value;
+    if (cart !== null &&
+        checkFirstName() &&
+        checkLastName() &&
+        checkAdress() &&
+        checkCity() &&
+        checkEmail()
+    ) {
+        // Requête POST
 
-    if (nameRegExp.test(value)) {
-        return true;
+        fetch("http://localhost:3000/api/products/order", {
+            method: "POST",
+            body: JSON.stringify({
+                contact,
+                products: products,
+            }),
+
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },
+        })
+            // Récupération et stockage de la réponse de l'API qui nous donne l'orderId
+
+            .then((response) => {
+                return response.json();
+            })
+
+            .then((server) => {
+
+                const orderId = server.orderId;
+
+                // Si l'ID de la commande a bien été récupéré, on redirige le client vers la page de Confirmation
+
+                if (orderId != "") {
+                    window.location.href = "confirmation.html?orderid=" + orderId;
+                }
+            });
     }
-
-    else {
-        lastNameErrorMsg.innerText = 'Réponse incorrecte, veuillez renseigner votre nom.';
-    }
-});
-
-// Verification de l'adresse
-
-var adressErrorMsg = document.getElementById('addressErrorMsg');
-
-formKanap.address.addEventListener('change', function (event) {
-
-    var value = event.target.value;
-
-    if (adressRegExp.test(value)) {
-        return true;
-    }
-
-    else {
-        adressErrorMsg.innerText = 'Réponse incorrecte, veuillez renseigner votre adresse postale.';
-    }
-});
-
-// Verification de la ville
-
-var cityErrorMsg = document.getElementById('cityErrorMsg');
-
-formKanap.city.addEventListener('change', function (event) {
-
-    var value = event.target.value;
-
-    if (nameRegExp.test(value)) {
-        return true;
-    }
-
-    else {
-        cityErrorMsg.innerText = 'Réponse incorrecte, veuillez renseigner votre ville.';
-    }
-});
-
-// Verification de l'E-mail
-
-var emailErrorMsg = document.getElementById('emailErrorMsg');
-
-formKanap.email.addEventListener('change', function (event) {
-
-    var value = event.target.value;
-
-    if (mailRegExp.test(value)) {
-        return true;
-    }
-
-    else {
-        emailErrorMsg.innerText = 'Réponse incorrecte, veuillez renseigner votre adresse email.';
-    }
-});
+}

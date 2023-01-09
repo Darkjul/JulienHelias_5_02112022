@@ -128,4 +128,3 @@ addToCart.addEventListener('click', (event) => {
     alert('Votre choix de canapé a bien été ajouté à votre panier');
 
 });
-

@@ -16,8 +16,6 @@ fetch("http://localhost:3000/api/products")
     console.log('Erreur Serveur Detectée ', error);
   });
 
-
-
 // Fonction qui affiche les produits de l'api sur la page index.html
 
 function displayProduct(product) {
@@ -56,6 +54,3 @@ function displayProduct(product) {
   creaParagraph.textContent = product.description;
   creaArticle.appendChild(creaParagraph);
 }
-
-
-

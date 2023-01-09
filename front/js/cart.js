@@ -21,7 +21,6 @@ console.log(kanapBasket);
 
 for (let basketProduct of kanapBasket) {
 
-
     fetch("http://localhost:3000/api/products/" + basketProduct.id)
         .then(response => response.json())
         .then((product) => {
@@ -34,7 +33,6 @@ for (let basketProduct of kanapBasket) {
         .catch(error => {
             console.log('Erreur Serveur Detectée ', error);
         });
-
 }
 
 // Gestion de l'affichage des produits sur la page panier
@@ -147,7 +145,6 @@ function displayProductBasket(basketProduct, product) {
         event.preventDefault();
         deleteArticle(dataSofaId, dataSofaColor);
     })
-
 }
 
 totalQuantity();
@@ -191,7 +188,6 @@ function totalPrice(priceProduct) {
     // 3 - Insertion du résultat sur la page html
 
     getTotalPrice.innerText = newPrice;
-
 }
 
 // Suppression d'un produit du panier
@@ -224,15 +220,9 @@ function deleteArticle(dataSofaId, dataSofaColor) {
 
 function changeQuantity(event) {
 
-    console.log(event.target)
-
     let inputQuantity = event.target;
 
-    console.log(inputQuantity.closest('article'))
-
     let articleProduct = inputQuantity.closest('article');
-
-    console.log(inputQuantity.value)
 
     const newQuantity = inputQuantity.value;
 
@@ -274,14 +264,7 @@ function changeQuantity(event) {
     window.location.reload();
 }
 
-
 // Validation du formulaire de commande
-
-let products = [];
-const cart = kanapBasket;
-for (const article of cart) {
-    products.push(article.id);
-}
 
 // Récupération des élements de paragraphes pour afficher les messages d'erreurs correspondants
 
@@ -415,15 +398,19 @@ orderButton.addEventListener("click", (event) => {
         city: document.getElementById("city").value,
     };
 
-    sendFinalOrder();
+    sendFinalOrder(contact);
 });
 
 // Fonction qui envoie la requête POST d'envoi de la commande si le formulaire et valide
 // Récupération de l'orderId de la commande en retour et redirection vers la page confirmation.html
 
-function sendFinalOrder() {
+function sendFinalOrder(contact) {
 
-    let cart = kanapBasket;
+    let products = [];
+    const cart = JSON.parse(localStorage.getItem('sofa'));
+    for (const article of cart) {
+        products.push(article.id);
+    }
 
     if (cart !== null &&
         checkFirstName() &&

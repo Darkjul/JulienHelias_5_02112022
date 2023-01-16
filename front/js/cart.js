@@ -207,8 +207,6 @@ function deleteArticle(dataSofaId, dataSofaColor) {
 
     let reloadCart = cartFilter;
 
-    // On sauvegarde la modification dans le Local Storage
-
     if (cartFilter.length > 0) {
 
         localStorage.setItem('sofa', JSON.stringify(reloadCart));

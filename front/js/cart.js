@@ -209,7 +209,18 @@ function deleteArticle(dataSofaId, dataSofaColor) {
 
     // On sauvegarde la modification dans le Local Storage
 
-    localStorage.setItem('sofa', JSON.stringify(reloadCart));
+    if (cartFilter.length > 0) {
+
+        localStorage.setItem('sofa', JSON.stringify(reloadCart));
+
+    }
+
+    // Si le panier est vide on purge le Local Storage et retour à la page d'acceuil
+
+    else {
+
+        localStorage.removeItem('sofa');
+    }
 
     // On recharge la page panier avec les modifications 
 

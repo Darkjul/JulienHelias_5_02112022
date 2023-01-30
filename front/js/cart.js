@@ -17,15 +17,15 @@ if (sofaInLocalStorage == null) {
 
 var kanapBasket = JSON.parse(sofaInLocalStorage);
 document.getElementById('totalPrice').innerText = 0;
-console.log(kanapBasket);
+//console.log(kanapBasket);
 
 for (let basketProduct of kanapBasket) {
 
     fetch("http://localhost:3000/api/products/" + basketProduct.id)
         .then(response => response.json())
         .then((product) => {
-            console.log('product', product);
-            console.log('LS', basketProduct);
+            //console.log('product', product);
+            //console.log('LS', basketProduct);
             displayProductBasket(basketProduct, product);
             totalPrice(product.price * basketProduct.quantity);
         })
@@ -242,6 +242,7 @@ function changeQuantity(event) {
     if (newQuantity < 1 || newQuantity > 100) {
 
         alert('Veuillez insérer une quatité entre 1 et 100');
+        window.location.reload();
         return;
     }
 
@@ -277,14 +278,6 @@ function changeQuantity(event) {
 
 // Validation du formulaire de commande
 
-// Récupération des élements de paragraphes pour afficher les messages d'erreurs correspondants
-
-let firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
-let lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
-let addressErrorMsg = document.getElementById("addressErrorMsg");
-let emailErrorMsg = document.getElementById("emailErrorMsg");
-let cityErrorMsg = document.getElementById("cityErrorMsg");
-
 // ReGex
 
 // Définition des variables de contrôle ReGex du formulaire
@@ -311,15 +304,18 @@ const testRegexEmail = (value) => {
 
 function checkFirstName() {
 
+    let firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
+
     let inputFirstName = document.getElementById("firstName").value;
 
     if (testRegexName(inputFirstName)) {
         firstNameErrorMsg.textContent = "Prénom validé";
+        firstNameErrorMsg.style.color = 'green';
         return true;
 
     } else {
         firstNameErrorMsg.textContent = "Veuillez renseigner un prénom valide !";
-
+        firstNameErrorMsg.style.color = 'red';
         return false;
     }
 }
@@ -328,15 +324,18 @@ function checkFirstName() {
 
 function checkLastName() {
 
+    let lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
+
     let inputLastName = document.getElementById("lastName").value;
 
     if (testRegexName(inputLastName)) {
         lastNameErrorMsg.textContent = "Nom validé";
+        lastNameErrorMsg.style.color = 'green';
         return true;
 
     } else {
         lastNameErrorMsg.textContent = "Veuillez renseigner un nom valide !";
-
+        lastNameErrorMsg.style.color = 'red';
         return false;
     }
 }
@@ -345,15 +344,18 @@ function checkLastName() {
 
 function checkCity() {
 
+    let cityErrorMsg = document.getElementById("cityErrorMsg");
+
     let inputCity = document.getElementById("city").value;
 
     if (testRegexAdress(inputCity)) {
         cityErrorMsg.textContent = "Ville validée";
+        cityErrorMsg.style.color = 'green';
         return true;
 
     } else {
         cityErrorMsg.textContent = "Veuillez renseigner une ville valide !";
-
+        cityErrorMsg.style.color = 'red';
         return false;
     }
 }
@@ -362,15 +364,18 @@ function checkCity() {
 
 function checkAdress() {
 
+    let addressErrorMsg = document.getElementById("addressErrorMsg");
+
     let inputAddress = document.getElementById("address").value;
 
     if (testRegexAdress(inputAddress)) {
         addressErrorMsg.textContent = "Adresse validée";
+        addressErrorMsg.style.color = 'green';
         return true;
 
     } else {
         addressErrorMsg.textContent = "Veuillez saisir une adresse valide !";
-
+        addressErrorMsg.style.color = 'red';
         return false;
     }
 }
@@ -379,15 +384,18 @@ function checkAdress() {
 
 function checkEmail() {
 
+    let emailErrorMsg = document.getElementById("emailErrorMsg");
+
     let inputEmail = document.getElementById("email").value;
 
     if (testRegexEmail(inputEmail)) {
         emailErrorMsg.textContent = "E-Mail Validé";
+        emailErrorMsg.style.color = 'green';
         return true;
 
     } else {
         emailErrorMsg.textContent = "Veuillez saisir une adresse email valide !";
-
+        emailErrorMsg.style.color = 'red';
         return false;
     }
 }
@@ -398,6 +406,7 @@ let orderButton = document.getElementById("order");
 
 orderButton.addEventListener("click", (event) => {
     event.preventDefault(event);
+
 
     // On sauvegarde les valeurs du formulaire client
 

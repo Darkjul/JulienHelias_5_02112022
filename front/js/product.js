@@ -7,7 +7,7 @@ fetch("http://localhost:3000/api/products/" + newID)
 
     .then((response) => response.json())
     .then((data) => {
-        console.log(data);
+        // console.log(data);
 
         document.title = data.name;
         displaySofa(data);
